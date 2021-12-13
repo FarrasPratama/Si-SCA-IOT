@@ -10,9 +10,9 @@
 
 
 #define RELAY_PIN 13
-#define LED_HIJAU 5
-#define LED_MERAH 18
-#define LED_KUNING 19
+#define LED_HIJAU 18
+#define LED_MERAH 19
+#define LED_KUNING 5
 #define BUZZER 27
 
 #define threshold 700
@@ -48,6 +48,9 @@ extern uint8_t dataindex;
 
 class Defibrilator{
     private:
+    uint16_t HR_Signal=0;
+    int diff = 0;
+    int BPM = 0;
     HardwareSerial *EcgSerial;
     Adafruit_MPU6050 MPU;
     uint8_t _datapin;

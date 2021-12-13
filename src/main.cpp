@@ -14,8 +14,8 @@ TaskHandle_t Defibrilation;
 
 int age;
 
-const char* ssid = "sc19";
-const char* password =  "4444333221";
+const char* ssid = "UB_Tech";
+const char* password =  "UBTECH2021";
 
 unsigned long lastTime = 0;
 unsigned long lastTimeTemperature = 0;

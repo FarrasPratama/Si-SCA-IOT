@@ -22,9 +22,6 @@ float beats[4];
 bool belowThreshold = true;
 int beatOld = 0;
 int beat_Index;
-int BPM = 0;
-uint16_t HR_Signal=0;
-int diff = 0;
 #define input 39
 
 Defibrilator::Defibrilator(HardwareSerial *HW){
@@ -55,10 +52,7 @@ void Defibrilator::GetECGSignal(){
   data="";
   sensor();
 
-    int index1 = data.indexOf(',');
-    int index2 = data.indexOf(',',index1+1);
-
-    this->Analogdata = data.substring(0,index1).toInt();
+    this->Analogdata = HR_Signal;
   if(
     ((this->Analogarray[0] < ECGOnDetect_Upper)  &&  Analogarray[0] > ECGOnDetect_Lower) 
     && 
@@ -84,8 +78,8 @@ void Defibrilator::GetECGSignal(){
     this->RRintervalnow = 0;    
   }
   else{
-    this->HBmean = data.substring(index1 + 1, index2).toInt();
-    this->RRintervalnow = data.substring(index2+1).toInt();
+    this->HBmean = BPM + 10;
+    this->RRintervalnow = diff;
   }
 
   
@@ -128,8 +122,7 @@ void Defibrilator::GetECGSignal(){
     // }
 }
 
-void calculateBPM()
-{
+void Defibrilator::calculateBPM() {
   int beat_new = millis();    // get the current millisecond
   diff = beat_new - beatOld;    // find the time between the last two beats
 //  Serial.println(diff);
@@ -144,9 +137,9 @@ void calculateBPM()
   beat_Index = (beat_Index + 1) % 4;  // cycle through the array instead of using FIFO queue
 }
 
-void sensor() {
+void Defibrilator::sensor() {
 
-  HR_Signal = analogRead(39);
+  HR_Signal = analogRead(36);
 //  Serial.println(HR_Signal);
   if (HR_Signal > threshold && belowThreshold == true)
   {
@@ -408,9 +401,9 @@ void Defibrilator::Ledact(uint16_t HB){
   Serial.println(percentage);
 
   if(percentage <= 63){
-    digitalWrite(LED_HIJAU, HIGH);
-    digitalWrite(LED_MERAH, LOW);
-    digitalWrite(LED_KUNING, LOW);
+    digitalWrite(LED_HIJAU, LOW);
+    digitalWrite(LED_MERAH, HIGH);
+    digitalWrite(LED_KUNING, HIGH);
     digitalWrite(BUZZER, LOW); 
     Serial.println("G");
   }
@@ -422,16 +415,16 @@ void Defibrilator::Ledact(uint16_t HB){
     Serial.println("Y");
   }
   else if(percentage >= 77 && percentage <= 93){
-    digitalWrite(LED_HIJAU, LOW);
-    digitalWrite(LED_MERAH, HIGH);
-    digitalWrite(LED_KUNING, LOW);
+    digitalWrite(LED_HIJAU, HIGH);
+    digitalWrite(LED_MERAH, LOW);
+    digitalWrite(LED_KUNING, HIGH);
     digitalWrite(BUZZER, LOW);
     Serial.println("R");
   }
   else{
-    digitalWrite(LED_HIJAU, LOW);
-    digitalWrite(LED_MERAH, HIGH);
-    digitalWrite(LED_KUNING, LOW);
+    digitalWrite(LED_HIJAU, HIGH);
+    digitalWrite(LED_MERAH, LOW);
+    digitalWrite(LED_KUNING, HIGH);
     digitalWrite(BUZZER, HIGH);
     Serial.println("!!!");
   }
