@@ -11,8 +11,8 @@ byte trigger1cnt = 0;
 byte trigger2cnt = 0;
 byte trigger3cnt = 0;
 int angleChange = 0;
-int lowerThres = 2;
-int higherThres = 12;
+int lowerThres = 10;
+int higherThres = 20;
 int angleLowerThres = 30;
 int angleHigherThres = 400;
 String data;
@@ -299,10 +299,18 @@ void Defibrilator::GetMPUdata()
 void Defibrilator::Falldetection(float ax, float ay, float az, float gx, float gy, float gz){
   float Raw_Amp = pow(pow(ax, 2) + pow(ay, 2) + pow(az, 2), 0.5);
   int Amp = Raw_Amp * 10; // Mulitiplied by 10 bcz values are between 0 to 1
-  // Serial.println(Amp);
-  if (Amp <= lowerThres && trigger2 == false)
+   Serial.println(Amp);
+   if(Amp > 20 || Amp <10)
+   {
+     fall=true;
+   }
+   else{
+     fall=false;
+   }
+  /*if (Amp <= lowerThres && trigger2 == false)
   { //if AM breaks lower threshold (0.4g)
     trigger1 = true;
+    fall = true;
     if (DEBUG)
       Serial.println(F("TRIGGER 1 ACTIVATED"));
   }
@@ -380,7 +388,7 @@ void Defibrilator::Falldetection(float ax, float ay, float az, float gx, float g
     trigger1cnt = 0;
     if (DEBUG)
       Serial.println(F("TRIGGER 1 DECACTIVATED"));
-  }
+  }*/
 }
 
 void Defibrilator::IsBodyFall(){
@@ -464,9 +472,9 @@ void Defibrilator::ShiftArray(){
   String c = String(Analogarray[0]) + "," + String(Analogarray[1]) + "," +String(Analogarray[2]) + "," + String(Analogarray[3]) + "," 
   + String(Analogarray[4]) + "," + String(Analogarray[5]) + "," + String(Analogarray[6]) + "," + String(Analogarray[7]) + "," + String(Analogarray[8]) 
   + "," + String(Analogarray[9]);
-  Serial.println(a);
-  Serial.println(d);
-  Serial.println(c); 
+ // Serial.println(a);
+ // Serial.println(d);
+ // Serial.println(c); 
 }
 
 uint16_t Defibrilator::GetHeartbeat(){

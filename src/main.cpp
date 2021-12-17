@@ -136,9 +136,11 @@ void loop()
     defibrilator.ShiftArray();
     defibrilator.Ledact(defibrilator.GetHeartbeat());
     Serial.println();   
-  // }
-
-  if(defibrilator.IsAritmia()){
+ // }
+   defibrilator.GetMPUdata();
+   defibrilator.Falldetection(defibrilator.ax,defibrilator.ay,defibrilator.az,defibrilator.gx,defibrilator.gy,defibrilator.gz);
+   
+  if(defibrilator.IsAritmia()==true || fall==true){
     defibrilator.RRDetection = "ARITMIA";
     aritmia = true;
       if(DEBUG){
@@ -151,13 +153,9 @@ void loop()
       digitalWrite(BUZZER, LOW);
   }
     }
-
-
-  // defibrilator.GetMPUdata();
-  // defibrilator.Falldetection(defibrilator.ax,defibrilator.ay,defibrilator.az,defibrilator.gx,defibrilator.gy,defibrilator.gz);
-  // if(fall){
-  //   if(DEBUG){
-  //     Serial.println("Jatuh GESS!!!");
-  //   }
-  // }
+    if(fall){         
+     if(DEBUG){
+      Serial.println("Jatuh GESS!!!");
+     }
+   }
 }
